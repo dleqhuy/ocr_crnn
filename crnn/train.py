@@ -51,7 +51,7 @@ df_results.index.name = 'Fold'
 kf = KFold(n_splits = config['num_kfold'],shuffle=True, random_state = 2)
 
 for i, (train_index, val_index) in enumerate(kf.split(df_sample)):
-    print(f"==============================Fold {i+1} ==============================")
+    print(f"==============================Fold {i+1}==============================")
     train_df = df_sample.iloc[train_index]
     val_df = df_sample.iloc[val_index]
 
