@@ -17,7 +17,7 @@ args = parser.parse_args()
 with args.config.open() as f:
     config = yaml.load(f, Loader=yaml.Loader)
 
-images  = glob.glob( f'{args.dir}/*.jpg')
+images  = glob.glob( f'{args.dir}/*/*.jpg')
 labels = [img.split(os.path.sep)[-1].split(".jpg")[0].split("_")[0] for img in images]
 
 characters = set(char for label in labels for char in label)
