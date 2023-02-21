@@ -9,6 +9,8 @@ import tensorflow as tf
 from decoders import CTCGreedyDecoder, CTCBeamSearchDecoder
 from losses import CTCLoss
 from metrics import SequenceAccuracy
+from dataset_factory import DatasetBuilder
+from models import build_model
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--config', type=Path, required=True, 
@@ -24,6 +26,14 @@ args = parser.parse_args()
 with args.config.open() as f:
     config = yaml.load(f, Loader=yaml.Loader)['dataset_builder']
 
+dataset_builder = DatasetBuilder(**config)
+
+model = build_model(dataset_builder.num_classes,
+                    weight=config.get('weight'),
+                    img_width=config['img_width'],
+                    img_height=config['img_height'],
+                    channel=config['channel']
+                   )
 
 if args.post == 'greedy':
     postprocess = CTCGreedyDecoder(config['vocab_path'])
@@ -32,7 +42,7 @@ elif args.post == 'beam_search':
 else:
     postprocess = None
 
-model = tf.keras.models.load_model(args.weight, compile=False)
+model.load_weights(args.weight)
 
 def read_img_and_resize(path, img_width, img_height, channel):
     img = tf.io.read_file(path)
@@ -44,7 +54,7 @@ def read_img_and_resize(path, img_width, img_height, channel):
 
     return img
 
-img_paths = glob.glob(f'{args.images}/*.png')
+img_paths = glob.glob(f'{args.images}/*.jpg')
 
 for img_path in img_paths:
     img = read_img_and_resize(str(img_path), config['img_width'],  config['img_height'], config['channel'])

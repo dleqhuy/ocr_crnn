@@ -11,14 +11,14 @@ $ pip install -r requirements.txt
 $ trdg --output_dir /content/drive/MyDrive/data -c 2000 -t 4 -w 2 -f 64 -k 5 -rk -do 0 
 $ python ocr_crnn/crnn/prepare.py \
 --config ocr_crnn/configs/text_recognition.yml \
---dir /content/drive/MyDrive/data
+--dir /content/sample_data
 ```
 
 ## Train
 ```bash
 $ python ocr_crnn/crnn/train.py \
 --config ocr_crnn/configs/text_recognition.yml \
---save_dir ocr_exp1
+--save_dir /content/drive/MyDrive/ocr_exp1
 ```
 
 ## Demo
