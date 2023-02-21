@@ -12,8 +12,6 @@ from dataset_factory import DatasetBuilder
 from losses import CTCLoss
 from metrics import SequenceAccuracy
 from models import build_model
-from sklearn.model_selection import KFold
-from IPython.display import display
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--config', type=Path, required=True,
@@ -40,60 +38,33 @@ model = build_model(dataset_builder.num_classes,
                     img_height=config['dataset_builder']['img_height'],
                     channel=config['dataset_builder']['channel']
                    )
+
+model.compile(optimizer=keras.optimizers.Adam(),
+              loss=CTCLoss(),
+              metrics=[SequenceAccuracy()])
+
 model.summary()
 
-df_sample = pd.read_csv(config['train_csv_path'])
-df_sample = df_sample.astype(str)
+train_df = pd.read_csv(config['train_csv_path']).astype(str)
+val_df = pd.read_csv(config['val_csv_path']).astype(str)
 
-df_results = pd.DataFrame(columns=['loss', 'sequence_accuracy', 'val_loss', 'val_sequence_accuracy','epoch'])
-df_results.index.name = 'Fold'
-#added some parameters
-kf = KFold(n_splits = config['num_kfold'],shuffle=True, random_state = 2)
+train_ds = dataset_builder(train_df, batch_size, shuffle=True)
+val_ds = dataset_builder(val_df, batch_size, cache=True)
 
-for i, (train_index, val_index) in enumerate(kf.split(df_sample)):
-    print(f"==============================Fold {i+1}==============================")
-    train_df = df_sample.iloc[train_index]
-    val_df = df_sample.iloc[val_index]
+model_prefix = '{epoch}_{val_loss:.4f}_{val_sequence_accuracy:.4f}'
+model_path = f'{args.save_dir}/{model_prefix}.h5'
 
-    train_ds = dataset_builder(train_df, batch_size, shuffle=True)
-    val_ds = dataset_builder(val_df, batch_size)
+callbacks = [
+    keras.callbacks.ModelCheckpoint(model_path,
+                                    save_weights_only=True),
 
-    model = build_model(dataset_builder.num_classes,
-                        weight=config.get('weight'),
-                        img_width=config['dataset_builder']['img_width'],
-                        img_height=config['dataset_builder']['img_height'],
-                        channel=config['dataset_builder']['channel']
-                       )
-    
-    model.compile(optimizer=keras.optimizers.Adam(),
-                    loss=CTCLoss(), metrics=[SequenceAccuracy()])
+    keras.callbacks.TensorBoard(log_dir=f'{args.save_dir}/logs{i}',
+                                **config['tensorboard']),
+    keras.callbacks.EarlyStopping(monitor="val_loss",**config['earlystopping']),
 
-    
-    
-    callbacks = [
-        keras.callbacks.TensorBoard(log_dir=f'{args.save_dir}/logs{i}',
-                                    **config['tensorboard']),
-        keras.callbacks.EarlyStopping(monitor="val_loss",**config['earlystopping']),
+]
 
-    ]
-
-    history = model.fit(train_ds, epochs=config['epochs'],
-                        callbacks=callbacks,
-                        verbose=config['fit_verbose'],
-                        validation_data=val_ds)
-    
-    model_path = f'{args.save_dir}/{i}_best_model.h5'
-    model.save(model_path)
-    
-    df_results.loc[i,'loss'] = history.history['loss'][-1]
-    df_results.loc[i,'sequence_accuracy'] = history.history['sequence_accuracy'][-1]
-    df_results.loc[i,'val_loss'] = history.history['val_loss'][-1]
-    df_results.loc[i,'val_sequence_accuracy'] = history.history['val_sequence_accuracy'][-1]
-    df_results.loc[i,'epoch'] = len(history.history['loss'])
-
-df_results.loc['Mean'] = df_results.mean()
-df_results.loc['Std'] = df_results.std()
-
-display(df_results)
-
-df_results.to_csv(f'{args.save_dir}/df_results.csv')
+history = model.fit(train_ds, epochs=config['epochs'],
+                    callbacks=callbacks,
+                    verbose=config['fit_verbose'],
+                    validation_data=val_ds)

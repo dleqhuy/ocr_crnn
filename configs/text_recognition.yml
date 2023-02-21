@@ -8,10 +8,10 @@ train:
     dataset_builder:
         <<: *ds_builder
     train_csv_path:
-        'ocr_crnn/configs/df_data.csv'
-
+        'ocr_crnn/configs/df_train.csv'
+    val_csv_path:
+        'ocr_crnn/configs/df_val.csv'
     batch_size_per_replica: 16
-    num_kfold: 5
     # Number of epochs to train.
     epochs: 20
     # TensorBoard Arguments
