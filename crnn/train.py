@@ -58,7 +58,7 @@ callbacks = [
     keras.callbacks.ModelCheckpoint(model_path,
                                     save_weights_only=True),
 
-    keras.callbacks.TensorBoard(log_dir=f'{args.save_dir}/logs{i}',
+    keras.callbacks.TensorBoard(log_dir=f'{args.save_dir}/logs',
                                 **config['tensorboard']),
     keras.callbacks.EarlyStopping(monitor="val_loss",**config['earlystopping']),
 
