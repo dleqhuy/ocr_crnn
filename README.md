@@ -8,7 +8,7 @@ $ pip install -r requirements.txt
 
 ## Data prepare
 ```bash
-$ trdg --output_dir /content/drive/MyDrive/data -c 2000 -t 4 -w 2 -f 64 -k 5 -rk -do 0 
+$ trdg --output_dir /content/drive/MyDrive/data -c 2000 -t 4 -w 1 -f 64 -k 5 -rk -do 0 
 $ python ocr_crnn/crnn/prepare.py \
 --config ocr_crnn/configs/text_recognition.yml \
 --dir /content/sample_data
@@ -23,9 +23,9 @@ $ python ocr_crnn/crnn/train.py \
 
 ## Demo
 ```bash
-$ python captcha/crnn/predict.py  \
---config captcha/configs/text_recognition.yml  \
---weight captcha_exp1/0_best_model.h5 \
---images captcha/captcha_test  \
+$ python ocr_crnn/crnn/predict.py  \
+--config ocr_crnn/configs/text_recognition.yml  \
+--weight /content/drive/MyDrive/ocr_exp1/10_0.2286_0.9502.h5 \
+--images /content/ocr_crnn/example/images  \
 --post greedy
 ```
