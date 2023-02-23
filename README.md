@@ -29,3 +29,17 @@ $ python ocr_crnn/crnn/predict.py  \
 --images /content/ocr_crnn/example/images  \
 --post greedy
 ```
+
+## Results
+| Ground truth 	| Prediction 	| Image 	|
+|--------------	|------------	|-------	|
+| detector 	| detector 	| ![1](example/images/detector_2.jpg "1") 	|
+| paraproctitis 	| paraproctitis 	| ![2](example/images/paraproctitis_7.jpg "2") 	|
+| Lindgren | Lindgren |  ![3](example/images/Lindgren_5.jpg "3")	|
+| twice-charged | twice-charged |  ![4](example/images/twice-charged_9.jpg "4")	|
+| Tindale | Tindale |  ![5](example/images/Tindale_1.jpg "5")	|
+| rhotacistic | rhotacistic |  ![6](example/images/rhotacistic_4.jpg "6")	|
+| encephala | encephala | ![7](example/images/encephala_6.jpg "7") 	|
+| fissive | fissive | ![8](example/images/fissive_8.jpg "8") 	|
+| microphagous | microphagous |  ![9](example/images/microphagous_0.jpg "9")	|
+| propretorial | propretorial | ![10](example/images/propretorial_3.jpg "10") 	|
