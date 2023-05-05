@@ -8,12 +8,14 @@ pip install -r requirements.txt
 
 ## Data prepare
 ```bash
-trdg --output_dir /content/drive/MyDrive/data -c 2000 -t 4 -w 1 -f 64 -k 5 -rk -do 0 
 
 python ocr_crnn/crnn/prepare.py \
 --config ocr_crnn/configs/text_recognition.yml \
---dir /content/sample_data
+--dir /content/data
 ```
+### output
+
+![1](image/output_prepare.png "1") 
 
 ## Train
 ```bash

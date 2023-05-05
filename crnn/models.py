@@ -45,7 +45,10 @@ def build_model(num_classes,
     x = layers.Bidirectional(layers.LSTM(128, return_sequences=True, dropout=0.25))(x)
     x = layers.Bidirectional(layers.LSTM(64, return_sequences=True, dropout=0.25))(x)
 
-    x = layers.Dense(units=num_classes, name='logits')(x)
+    # +2 is to account for the two special tokens introduced by the CTC loss.
+    # The recommendation comes here: https://git.io/J0eXP.
+
+    x = layers.Dense(units=num_classes+2, name='logits')(x)
 
     model = keras.Model(inputs=img_input, outputs=x, name=model_name)
     if weight is not None:

@@ -1,8 +1,9 @@
 dataset_builder: &ds_builder
     vocab_path: 'ocr_crnn/configs/vocab.txt'
-    img_width: 200
+    img_width: 128
     img_height: 32
     channel: 1
+    padding_token: 99
 
 train:
     dataset_builder:
@@ -13,7 +14,7 @@ train:
         'ocr_crnn/configs/df_val.csv'
     test_csv_path:
         'ocr_crnn/configs/df_test.csv'
-    batch_size_per_replica: 128
+    batch_size_per_replica: 64
     # Number of epochs to train.
     epochs: 10
     # TensorBoard Arguments
