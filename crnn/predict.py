@@ -80,7 +80,7 @@ def read_img_and_resize(path, img_width, img_height, channel):
     img = tf.cast(img, tf.float32) / 255.0
     return img
 
-img_paths = glob.glob(f'{args.images}/*.jpg')
+img_paths = glob.glob(f'{args.images}/*.png')
 
 for img_path in img_paths:
     img = read_img_and_resize(str(img_path), config['img_width'],  config['img_height'], config['channel'])
