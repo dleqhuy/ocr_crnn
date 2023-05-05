@@ -64,7 +64,7 @@ class DatasetBuilder:
     def _decode_img(self, filename, label):
         img = tf.io.read_file(filename)
         img = tf.io.decode_png(img, channels=self.channel)
-        img = self._distortion_free_resize(img, (self.img_height, self.img_width))
+        img = self._distortion_free_resize(img, (self.img_width, self.img_height))
         img = tf.cast(img, tf.float32) / 255.0
                 
         return img, label

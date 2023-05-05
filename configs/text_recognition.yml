@@ -15,7 +15,7 @@ train:
         'ocr_crnn/configs/df_test.csv'
     batch_size_per_replica: 64
     # Number of epochs to train.
-    epochs: 10
+    epochs: 1
     # TensorBoard Arguments
     # https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/TensorBoard#arguments_1
     tensorboard:
@@ -23,4 +23,5 @@ train:
         profile_batch: 0
     earlystopping:
         patience: 2
+        restore_best_weights: True
     fit_verbose: 1

@@ -35,7 +35,7 @@ batch_size = config['batch_size_per_replica']
 dataset_builder = DatasetBuilder(**config['dataset_builder'])
 
 model = build_model(dataset_builder.num_classes,
-                    weight=config.get('weight'),
+                    #weight=config.get('weight'),
                     img_width=config['dataset_builder']['img_width'],
                     img_height=config['dataset_builder']['img_height'],
                     channel=config['dataset_builder']['channel']
@@ -55,12 +55,13 @@ train_ds = dataset_builder(train_df, batch_size, shuffle=True)
 val_ds = dataset_builder(val_df, batch_size, cache=True)
 test_ds = dataset_builder(test_df, batch_size)
 
-model_prefix = '{epoch}_{val_loss:.4f}_{val_sequence_accuracy:.4f}'
-model_path = f'{args.save_dir}/{model_prefix}.h5'
+# model_prefix = '{epoch}_{val_loss:.4f}_{val_sequence_accuracy:.4f}'
+# model_path = f'{args.save_dir}/{model_prefix}.h5'
+model_path = f'{args.save_dir}/best'
 
 callbacks = [
-    keras.callbacks.ModelCheckpoint(model_path,
-                                    save_weights_only=True),
+    # keras.callbacks.ModelCheckpoint(model_path,
+    #                                 save_weights_only=True),
 
     keras.callbacks.TensorBoard(log_dir=f'{args.save_dir}/logs',
                                 **config['tensorboard']),
@@ -75,3 +76,4 @@ history = model.fit(train_ds, epochs=config['epochs'],
 
 print('Accuracy on test set:')
 model.evaluate(test_ds)
+model.save(model_path)
