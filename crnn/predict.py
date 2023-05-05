@@ -3,12 +3,9 @@ from pathlib import Path
 
 import glob
 import yaml
-from tensorflow import keras
 import tensorflow as tf
 
 from decoders import CTCGreedyDecoder, CTCBeamSearchDecoder
-from losses import CTCLoss
-from metrics import SequenceAccuracy
 from dataset_factory import DatasetBuilder
 from models import build_model
 

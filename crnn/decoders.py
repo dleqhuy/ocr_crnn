@@ -1,6 +1,7 @@
 import tensorflow as tf
 from tensorflow.keras import layers
 
+
 class CTCDecoder():
     def __init__(self, vocab_path):
         with open(vocab_path) as file:

@@ -1,5 +1,5 @@
-opencv-python-headless
 tensorflow
 pandas
+numpy
 pyyaml
 gdown
