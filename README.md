@@ -9,6 +9,10 @@ pip install -r requirements.txt
 ## Data prepare
 ```bash
 
+gdown https://drive.google.com/uc?id=1Fyc8ihAt0TrRQE7HFE9pSqBs0Cows_O5
+
+unzip -qq data.zip
+
 python ocr_crnn/crnn/prepare.py \
 --config ocr_crnn/configs/text_recognition.yml \
 --dir /content/data

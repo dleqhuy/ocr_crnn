@@ -3,7 +3,6 @@ dataset_builder: &ds_builder
     img_width: 128
     img_height: 32
     channel: 1
-    padding_token: 99
 
 train:
     dataset_builder:
