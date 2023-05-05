@@ -32,7 +32,7 @@ python ocr_crnn/crnn/train.py \
 ```
 ### output
 
-![1](image/train_output.png "1") 
+![1](image/output_train.png "1") 
 
 ## Demo
 ```bash
@@ -42,5 +42,9 @@ python ocr_crnn/crnn/predict.py  \
 --images ocr_crnn/example/images  \
 --post greedy
 ```
+![1](example/images/affluent.png "1") 
+
 
 ### output
+
+![1](image/output_demo.png "1") 
