@@ -2,12 +2,9 @@ from tensorflow import keras
 from tensorflow.keras import layers
 
 
-def build_model(num_classes,
-                weight=None,
-                img_width=50,
-                img_height=200,
-                channel=1,
-                model_name='crnn'):
+def build_model(
+    num_classes, weight=None, img_width=50, img_height=200, channel=1, model_name="crnn"
+):
     x = img_input = keras.Input(shape=(img_width, img_height, channel))
 
     # First conv block
@@ -48,7 +45,7 @@ def build_model(num_classes,
     # +2 is to account for the two special tokens introduced by the CTC loss.
     # The recommendation comes here: https://git.io/J0eXP.
 
-    x = layers.Dense(units=num_classes+2, name='logits')(x)
+    x = layers.Dense(units=num_classes + 2, name="logits")(x)
 
     model = keras.Model(inputs=img_input, outputs=x, name=model_name)
     if weight is not None:

@@ -2,11 +2,14 @@ import tensorflow as tf
 from tensorflow.keras import layers
 
 
-class CTCDecoder():
+class CTCDecoder:
     def __init__(self, vocab_path):
         with open(vocab_path) as file:
             vocab = [line.rstrip() for line in file]
-        self.char_to_num = layers.StringLookup(vocabulary=vocab, mask_token=None,)
+        self.char_to_num = layers.StringLookup(
+            vocabulary=vocab,
+            mask_token=None,
+        )
 
         self.num_to_char = layers.StringLookup(
             vocabulary=self.char_to_num.get_vocabulary(), mask_token=None, invert=True
@@ -23,14 +26,13 @@ class CTCGreedyDecoder(CTCDecoder):
     def __init__(self, table_path, merge_repeated=True):
         super().__init__(table_path)
         self.merge_repeated = merge_repeated
-        
+
     def call(self, inputs):
         input_shape = tf.shape(inputs)
         sequence_length = tf.fill([input_shape[0]], input_shape[1])
         decoded, neg_sum_logits = tf.nn.ctc_greedy_decoder(
-            tf.transpose(inputs, perm=[1, 0, 2]), 
-            sequence_length,
-            self.merge_repeated)
+            tf.transpose(inputs, perm=[1, 0, 2]), sequence_length, self.merge_repeated
+        )
         strings = self.detokenize(decoded[0])
         labels = tf.cast(decoded[0], tf.int32)
         loss = tf.nn.ctc_loss(
@@ -39,7 +41,8 @@ class CTCGreedyDecoder(CTCDecoder):
             label_length=None,
             logit_length=sequence_length,
             logits_time_major=False,
-            blank_index=-1)
+            blank_index=-1,
+        )
         probability = tf.math.exp(-loss)
         return strings, probability
 
@@ -49,14 +52,15 @@ class CTCBeamSearchDecoder(CTCDecoder):
         super().__init__(table_path)
         self.beam_width = beam_width
         self.top_paths = top_paths
-        
+
     def call(self, inputs):
         input_shape = tf.shape(inputs)
         decoded, log_probability = tf.nn.ctc_beam_search_decoder(
-            tf.transpose(inputs, perm=[1, 0, 2]), 
+            tf.transpose(inputs, perm=[1, 0, 2]),
             tf.fill([input_shape[0]], input_shape[1]),
-            self.beam_width, 
-            self.top_paths)
+            self.beam_width,
+            self.top_paths,
+        )
         strings = []
         for i in range(self.top_paths):
             strings.append(self.detokenize(decoded[i]))
